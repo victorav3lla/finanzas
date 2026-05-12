@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mis Finanzas</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f0f0f;color:#e8e8e8;padding:1.5rem;min-height:100vh}
+.app{max-width:680px;margin:0 auto}
+.tabs{display:flex;gap:4px;margin-bottom:1.25rem;background:#1a1a1a;padding:4px;border-radius:10px;border:0.5px solid #2a2a2a}
+.tab{flex:1;padding:8px;border:none;border-radius:7px;background:transparent;cursor:pointer;font-size:13px;font-weight:500;color:#555;transition:all .15s}
+.tab.active{background:#2a2a2a;color:#e8e8e8}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1.25rem}
+.stat{background:#1a1a1a;border-radius:10px;padding:0.75rem 1rem;border:0.5px solid #2a2a2a}
+.stat-label{font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.stat-value{font-size:20px;font-weight:500;color:#e8e8e8}
+.stat-value.income{color:#1D9E75}
+.stat-value.expense{color:#D85A30}
+.stat-value.debt{color:#C97B30}
+.quick-add{background:#1a1a1a;border:0.5px solid #2a2a2a;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem}
+.type-toggle{display:flex;gap:6px;margin-bottom:1rem}
+.type-btn{flex:1;padding:8px;border:0.5px solid #2a2a2a;border-radius:8px;background:transparent;cursor:pointer;font-size:13px;color:#888;transition:all .15s}
+.type-btn.active-expense{background:rgba(216,90,48,.12);border-color:#D85A30;color:#D85A30;font-weight:500}
+.type-btn.active-income{background:rgba(29,158,117,.12);border-color:#1D9E75;color:#1D9E75;font-weight:500}
+.amount-row{display:flex;align-items:center;gap:8px;margin-bottom:1rem}
+.currency{font-size:22px;font-weight:500;color:#555}
+.big-input{flex:1;font-size:28px;font-weight:500;border:none;background:transparent;color:#e8e8e8;outline:none;width:100%}
+.big-input::placeholder{color:#333}
+.cats{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
+.cat-btn{padding:6px 10px;border:0.5px solid #222;border-radius:8px;background:transparent;cursor:pointer;font-size:12px;color:#888;transition:all .12s;display:flex;align-items:center;gap:4px}
+.cat-btn.selected{background:#242424;border-color:#444;color:#e8e8e8;font-weight:500}
+.note-row{display:flex;gap:8px}
+.text-input{flex:1;padding:8px 12px;border:0.5px solid #222;border-radius:8px;background:#141414;color:#e8e8e8;font-size:14px;outline:none}
+.text-input:focus{border-color:#444}
+.btn-primary{padding:8px 20px;border:none;border-radius:8px;background:#e8e8e8;color:#0f0f0f;font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap}
+.btn-primary:disabled{opacity:.4;cursor:default}
+.btn-primary:active:not(:disabled){opacity:.8}
+.toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem}
+.toolbar-left{display:flex;align-items:center;gap:8px}
+.toolbar-right{display:flex;align-items:center;gap:8px}
+.nav-btn{background:none;border:0.5px solid #2a2a2a;border-radius:6px;cursor:pointer;font-size:14px;padding:2px 8px;color:#888}
+.month-label{font-size:13px;color:#e8e8e8;font-weight:500;min-width:110px;text-align:center}
+.import-btn{font-size:12px;padding:5px 10px;border:0.5px solid #2a2a2a;border-radius:8px;background:transparent;cursor:pointer;color:#888}
+.import-btn:hover{background:#1a1a1a;color:#e8e8e8}
+.ghost-btn{font-size:12px;color:#444;background:none;border:none;cursor:pointer}
+.ghost-btn:hover{color:#888}
+.tx-list{display:flex;flex-direction:column;gap:6px}
+.tx-item{display:flex;align-items:center;gap:12px;padding:10px 14px;background:#1a1a1a;border:0.5px solid #222;border-radius:10px}
+.tx-item:hover{border-color:#2a2a2a}
+.tx-icon{width:34px;height:34px;border-radius:8px;background:#242424;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.tx-info{flex:1;min-width:0}
+.tx-desc{font-size:14px;color:#e8e8e8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tx-meta{font-size:12px;color:#555;margin-top:2px;display:flex;gap:6px;align-items:center}
+.badge{font-size:10px;padding:2px 6px;border-radius:4px;background:#242424;color:#666;border:0.5px solid #2a2a2a}
+.badge.email{background:rgba(29,158,117,.1);color:#1D9E75;border-color:rgba(29,158,117,.3)}
+.tx-amount{font-size:15px;font-weight:500;flex-shrink:0}
+.tx-amount.income{color:#1D9E75}
+.tx-amount.expense{color:#D85A30}
+.row-delete{background:none;border:none;cursor:pointer;color:#333;font-size:18px;padding:0 4px;line-height:1;opacity:0;transition:opacity .12s}
+.tx-item:hover .row-delete,.payment-item:hover .row-delete{opacity:1}
+.row-delete:hover{color:#888}
+.empty{text-align:center;padding:2rem;color:#444;font-size:14px}
+.loading{text-align:center;padding:2rem;color:#333;font-size:13px}
+/* Debts */
+.debt-add{background:#1a1a1a;border:0.5px solid #2a2a2a;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem}
+.debt-add-title{font-size:12px;color:#555;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.75rem}
+.debt-fields{display:flex;flex-direction:column;gap:8px}
+.debt-row{display:flex;gap:8px}
+.debt-list{display:flex;flex-direction:column;gap:10px}
+.debt-card{background:#1a1a1a;border:0.5px solid #222;border-radius:12px;overflow:hidden}
+.debt-card.paid{border-color:#1D9E7540;opacity:.7}
+.debt-header{display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;user-select:none}
+.debt-emoji{width:34px;height:34px;border-radius:8px;background:#242424;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.debt-info{flex:1;min-width:0}
+.debt-name{font-size:14px;font-weight:500;color:#e8e8e8}
+.debt-sub{font-size:12px;color:#555;margin-top:2px}
+.debt-right{text-align:right;flex-shrink:0}
+.debt-remaining{font-size:15px;font-weight:500;color:#C97B30}
+.debt-remaining.paid{color:#1D9E75}
+.debt-pct{font-size:11px;color:#555;margin-top:2px}
+.progress-bar{height:3px;background:#1f1f1f}
+.progress-fill{height:100%;background:#C97B30;border-radius:2px;transition:width .3s}
+.progress-fill.paid{background:#1D9E75}
+.debt-body{padding:12px 14px;border-top:0.5px solid #1f1f1f;display:none}
+.debt-body.open{display:block}
+.payments-list{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
+.payment-item{display:flex;align-items:center;gap:10px;padding:7px 10px;background:#141414;border-radius:8px;font-size:13px}
+.payment-date{color:#555;flex-shrink:0;font-size:12px}
+.payment-note{flex:1;color:#888;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.payment-amount{color:#1D9E75;font-weight:500;flex-shrink:0}
+.add-payment-row{display:flex;gap:6px;align-items:center}
+.debt-footer{display:flex;justify-content:flex-end;margin-top:10px}
+.delete-debt-btn{font-size:12px;color:#333;background:none;border:none;cursor:pointer}
+.delete-debt-btn:hover{color:#D85A30}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#e8e8e8;color:#0f0f0f;padding:8px 16px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:100;white-space:nowrap}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<input type="file" id="file-input" accept=".json" style="display:none">
+<div class="toast" id="toast"></div>
+<div class="app">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('gastos')">Gastos e Ingresos</button>
+    <button class="tab" onclick="switchTab('deudas')">Deudas</button>
+  </div>
+
+  <!-- TAB GASTOS -->
+  <div id="tab-gastos">
+    <div class="stats">
+      <div class="stat"><div class="stat-label">Balance</div><div class="stat-value" id="stat-balance">$0</div></div>
+      <div class="stat"><div class="stat-label">Ingresos</div><div class="stat-value income" id="stat-income">$0</div></div>
+      <div class="stat"><div class="stat-label">Gastos</div><div class="stat-value expense" id="stat-expenses">$0</div></div>
+    </div>
+    <div class="quick-add">
+      <div class="type-toggle">
+        <button class="type-btn active-expense" id="btn-expense" onclick="setType('expense')">Gasto</button>
+        <button class="type-btn" id="btn-income" onclick="setType('income')">Ingreso</button>
+      </div>
+      <div class="amount-row">
+        <span class="currency">$</span>
+        <input id="amount-input" class="big-input" type="number" placeholder="0" min="0" step="any">
+      </div>
+      <div class="cats" id="cats-container"></div>
+      <div class="note-row">
+        <input id="note-input" class="text-input" type="text" placeholder="Nota (opcional)..." maxlength="60">
+        <button class="btn-primary" id="add-tx-btn" onclick="addTransaction()">Agregar</button>
+      </div>
+    </div>
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <button class="nav-btn" onclick="changeMonth(-1)">&#8249;</button>
+        <span class="month-label" id="month-label"></span>
+        <button class="nav-btn" onclick="changeMonth(1)">&#8250;</button>
+      </div>
+      <div class="toolbar-right">
+        <button class="import-btn" onclick="document.getElementById('file-input').click()">⬆ Importar JSON</button>
+        <button class="ghost-btn" onclick="clearMonth()">Borrar mes</button>
+      </div>
+    </div>
+    <div class="tx-list" id="tx-list"><div class="loading">Cargando...</div></div>
+  </div>
+
+  <!-- TAB DEUDAS -->
+  <div id="tab-deudas" style="display:none">
+    <div class="stats">
+      <div class="stat"><div class="stat-label">Total deudas</div><div class="stat-value debt" id="debt-total">$0</div></div>
+      <div class="stat"><div class="stat-label">Pagado</div><div class="stat-value income" id="debt-paid-stat">$0</div></div>
+      <div class="stat"><div class="stat-label">Pendiente</div><div class="stat-value expense" id="debt-pending">$0</div></div>
+    </div>
+    <div class="debt-add">
+      <div class="debt-add-title">Nueva deuda</div>
+      <div class="debt-fields">
+        <div class="debt-row">
+          <input id="debt-name" class="text-input" type="text" placeholder="Nombre (ej: Tarjeta Nu, Préstamo mamá...)" maxlength="60" style="flex:2">
+          <input id="debt-amount" class="text-input" type="number" placeholder="Monto total" min="0" style="flex:1;font-size:18px">
+        </div>
+        <div class="debt-row">
+          <input id="debt-note" class="text-input" type="text" placeholder="Nota opcional..." maxlength="80">
+          <button class="btn-primary" id="add-debt-btn" onclick="addDebt()">Agregar</button>
+        </div>
+      </div>
+    </div>
+    <div class="debt-list" id="debt-list"><div class="loading">Cargando...</div></div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://zfaueqcgrupbxjeibuwh.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpmYXVlcWNncnVwYnhqZWlidXdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2MDE4OTIsImV4cCI6MjA5NDE3Nzg5Mn0.ur6BqrJp9gSAs_2s4vq1Qd_U_9nuU6aEHNscFbBgrTY';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const CATS={
+  expense:[
+    {id:'food',label:'Comida',icon:'🍽'},{id:'transport',label:'Transporte',icon:'🚌'},
+    {id:'market',label:'Mercado',icon:'🛒'},{id:'health',label:'Salud',icon:'💊'},
+    {id:'ocio',label:'Ocio',icon:'🎬'},{id:'ropa',label:'Ropa',icon:'👕'},
+    {id:'servicios',label:'Servicios',icon:'💡'},{id:'otro',label:'Otro',icon:'📦'},
+  ],
+  income:[
+    {id:'salary',label:'Salario',icon:'💼'},{id:'freelance',label:'Freelance',icon:'💻'},
+    {id:'otro',label:'Otro',icon:'💰'},
+  ]
+};
+const ALL_CATS=[...CATS.expense,...CATS.income];
+let currentType='expense',selectedCat='food',viewYear,viewMonth;
+const now=new Date();viewYear=now.getFullYear();viewMonth=now.getMonth();
+
+function fmtMoney(n){return'$'+Math.round(n).toLocaleString('es-CO')}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800)}
+function setLoading(id,val){const b=document.getElementById(id);if(b)b.disabled=val}
+
+function switchTab(tab){
+  document.getElementById('tab-gastos').style.display=tab==='gastos'?'block':'none';
+  document.getElementById('tab-deudas').style.display=tab==='deudas'?'block':'none';
+  document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('active',(i===0&&tab==='gastos')||(i===1&&tab==='deudas')));
+  if(tab==='deudas')renderDebts();
+}
+
+function setType(t){
+  currentType=t;
+  document.getElementById('btn-expense').className='type-btn'+(t==='expense'?' active-expense':'');
+  document.getElementById('btn-income').className='type-btn'+(t==='income'?' active-income':'');
+  selectedCat=CATS[t][0].id;renderCats();
+}
+function renderCats(){
+  const c=document.getElementById('cats-container');c.innerHTML='';
+  CATS[currentType].forEach(cat=>{
+    const b=document.createElement('button');
+    b.className='cat-btn'+(cat.id===selectedCat?' selected':'');
+    b.innerHTML=`<span>${cat.icon}</span><span>${cat.label}</span>`;
+    b.onclick=()=>{selectedCat=cat.id;renderCats()};
+    c.appendChild(b);
+  });
+}
+
+async function renderTxs(){
+  const months=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  document.getElementById('month-label').textContent=months[viewMonth]+' '+viewYear;
+  document.getElementById('tx-list').innerHTML='<div class="loading">Cargando...</div>';
+
+  const start=new Date(viewYear,viewMonth,1).toISOString();
+  const end=new Date(viewYear,viewMonth+1,1).toISOString();
+  const{data:txs,error}=await sb.from('transactions').select('*').gte('date',start).lt('date',end).order('date',{ascending:true});
+  if(error){showToast('Error al cargar');console.error(error);return;}
+
+  let inc=0,exp=0;
+  txs.forEach(t=>t.type==='income'?inc+=t.amount:exp+=t.amount);
+  const bal=inc-exp;
+  document.getElementById('stat-income').textContent=fmtMoney(inc);
+  document.getElementById('stat-expenses').textContent=fmtMoney(exp);
+  const bEl=document.getElementById('stat-balance');
+  bEl.textContent=fmtMoney(bal);bEl.style.color=bal>=0?'#1D9E75':'#D85A30';
+
+  const list=document.getElementById('tx-list');
+  if(!txs.length){list.innerHTML='<div class="empty">Sin movimientos este mes</div>';return;}
+  list.innerHTML='';
+  [...txs].reverse().forEach(tx=>{
+    const cat=ALL_CATS.find(c=>c.id===tx.cat)||{icon:'📦',label:'Otro'};
+    const d=new Date(tx.date).toLocaleDateString('es-CO',{day:'numeric',month:'short'});
+    const eb=tx.source==='email'?'<span class="badge email">correo</span>':'';
+    const div=document.createElement('div');div.className='tx-item';
+    div.innerHTML=`<div class="tx-icon">${cat.icon}</div><div class="tx-info"><div class="tx-desc">${tx.note||cat.label}</div><div class="tx-meta"><span>${d}</span><span class="badge">${cat.label}</span>${eb}</div></div><span class="tx-amount ${tx.type}">${tx.type==='income'?'+':'-'}${fmtMoney(tx.amount)}</span><button class="row-delete" onclick="deleteTx('${tx.id}')">×</button>`;
+    list.appendChild(div);
+  });
+}
+
+async function addTransaction(){
+  const amt=parseFloat(document.getElementById('amount-input').value);
+  if(!amt||amt<=0){document.getElementById('amount-input').focus();return;}
+  const note=document.getElementById('note-input').value.trim();
+  setLoading('add-tx-btn',true);
+  const{error}=await sb.from('transactions').insert({type:currentType,amount:amt,cat:selectedCat,note,date:new Date().toISOString(),source:'manual'});
+  setLoading('add-tx-btn',false);
+  if(error){showToast('Error al guardar');console.error(error);return;}
+  document.getElementById('amount-input').value='';
+  document.getElementById('note-input').value='';
+  document.getElementById('amount-input').focus();
+  renderTxs();
+}
+
+async function deleteTx(id){
+  const{error}=await sb.from('transactions').delete().eq('id',id);
+  if(error){showToast('Error al eliminar');return;}
+  renderTxs();
+}
+
+async function clearMonth(){
+  if(!confirm('¿Borrar todos los movimientos de este mes?'))return;
+  const start=new Date(viewYear,viewMonth,1).toISOString();
+  const end=new Date(viewYear,viewMonth+1,1).toISOString();
+  await sb.from('transactions').delete().gte('date',start).lt('date',end);
+  renderTxs();
+}
+
+function changeMonth(delta){
+  viewMonth+=delta;
+  if(viewMonth>11){viewMonth=0;viewYear++;}
+  if(viewMonth<0){viewMonth=11;viewYear--;}
+  renderTxs();
+}
+
+// --- DEUDAS ---
+async function renderDebts(){
+  document.getElementById('debt-list').innerHTML='<div class="loading">Cargando...</div>';
+  const{data:debts,error}=await sb.from('debts').select('*').order('created_at',{ascending:true});
+  if(error){showToast('Error al cargar deudas');return;}
+
+  let tot=0,paid=0;
+  debts.forEach(d=>{tot+=d.total;paid+=(d.payments||[]).reduce((s,p)=>s+p.amount,0)});
+  document.getElementById('debt-total').textContent=fmtMoney(tot);
+  document.getElementById('debt-paid-stat').textContent=fmtMoney(paid);
+  document.getElementById('debt-pending').textContent=fmtMoney(Math.max(0,tot-paid));
+
+  const list=document.getElementById('debt-list');
+  if(!debts.length){list.innerHTML='<div class="empty">Sin deudas registradas</div>';return;}
+  list.innerHTML='';
+
+  debts.forEach((debt)=>{
+    const paidAmt=(debt.payments||[]).reduce((s,p)=>s+p.amount,0);
+    const remaining=Math.max(0,debt.total-paidAmt);
+    const pct=Math.min(100,Math.round(paidAmt/debt.total*100));
+    const isPaid=remaining<=0;
+    const card=document.createElement('div');
+    card.className='debt-card'+(isPaid?' paid':'');
+    const did=debt.id;
+    card.innerHTML=`
+      <div class="debt-header" onclick="toggleDebt('${did}')">
+        <div class="debt-emoji">${isPaid?'✅':'💳'}</div>
+        <div class="debt-info">
+          <div class="debt-name">${debt.name}</div>
+          <div class="debt-sub">${debt.note||'Total: '+fmtMoney(debt.total)}</div>
+        </div>
+        <div class="debt-right">
+          <div class="debt-remaining${isPaid?' paid':''}">${isPaid?'Pagada':fmtMoney(remaining)}</div>
+          <div class="debt-pct">${pct}% pagado</div>
+        </div>
+      </div>
+      <div class="progress-bar"><div class="progress-fill${isPaid?' paid':''}" style="width:${pct}%"></div></div>
+      <div class="debt-body" id="debt-body-${did}">
+        <div class="payments-list" id="payments-${did}"></div>
+        <div class="add-payment-row">
+          <span style="color:#555;font-size:13px;flex-shrink:0">$</span>
+          <input class="text-input" id="pay-amt-${did}" type="number" placeholder="Monto del pago" min="0" style="flex:1;font-size:16px">
+          <input class="text-input" id="pay-note-${did}" type="text" placeholder="Nota..." maxlength="50" style="flex:1.2;font-size:13px">
+          <button class="btn-primary" onclick="addPayment('${did}')" style="font-size:13px;padding:7px 14px">Pagar</button>
+        </div>
+        <div class="debt-footer">
+          <button class="delete-debt-btn" onclick="deleteDebt('${did}')">Eliminar deuda</button>
+        </div>
+      </div>`;
+    list.appendChild(card);
+
+    const pList=card.querySelector(`#payments-${did}`);
+    (debt.payments||[]).slice().reverse().forEach((p,rpi)=>{
+      const pi=(debt.payments.length-1-rpi);
+      const d=new Date(p.date).toLocaleDateString('es-CO',{day:'numeric',month:'short'});
+      const pDiv=document.createElement('div');pDiv.className='payment-item';
+      pDiv.innerHTML=`<span class="payment-date">${d}</span><span class="payment-note">${p.note||'Pago'}</span><span class="payment-amount">+${fmtMoney(p.amount)}</span><button class="row-delete" onclick="deletePayment('${did}',${pi})">×</button>`;
+      pList.appendChild(pDiv);
+    });
+
+    card.querySelector(`#pay-amt-${did}`).addEventListener('keydown',e=>{if(e.key==='Enter')card.querySelector(`#pay-note-${did}`).focus()});
+    card.querySelector(`#pay-note-${did}`).addEventListener('keydown',e=>{if(e.key==='Enter')addPayment(did)});
+  });
+}
+
+function toggleDebt(id){document.getElementById(`debt-body-${id}`).classList.toggle('open')}
+
+async function addDebt(){
+  const name=document.getElementById('debt-name').value.trim();
+  const amt=parseFloat(document.getElementById('debt-amount').value);
+  const note=document.getElementById('debt-note').value.trim();
+  if(!name||!amt||amt<=0){showToast('Ingresa nombre y monto');return;}
+  setLoading('add-debt-btn',true);
+  const{error}=await sb.from('debts').insert({name,total:amt,note,date:new Date().toISOString(),payments:[]});
+  setLoading('add-debt-btn',false);
+  if(error){showToast('Error al guardar');console.error(error);return;}
+  document.getElementById('debt-name').value='';
+  document.getElementById('debt-amount').value='';
+  document.getElementById('debt-note').value='';
+  renderDebts();
+}
+
+async function addPayment(did){
+  const amt=parseFloat(document.getElementById(`pay-amt-${did}`).value);
+  const note=document.getElementById(`pay-note-${did}`).value.trim();
+  if(!amt||amt<=0){document.getElementById(`pay-amt-${did}`).focus();return;}
+  const{data:debt,error:fetchErr}=await sb.from('debts').select('payments').eq('id',did).single();
+  if(fetchErr){showToast('Error');return;}
+  const payments=[...(debt.payments||[]),{amount:amt,note,date:new Date().toISOString()}];
+  const{error}=await sb.from('debts').update({payments}).eq('id',did);
+  if(error){showToast('Error al guardar pago');return;}
+  renderDebts();
+  setTimeout(()=>{const b=document.getElementById(`debt-body-${did}`);if(b)b.classList.add('open')},50);
+}
+
+async function deletePayment(did,pi){
+  if(!confirm('¿Eliminar este pago?'))return;
+  const{data:debt,error:fetchErr}=await sb.from('debts').select('payments').eq('id',did).single();
+  if(fetchErr){showToast('Error');return;}
+  const payments=[...(debt.payments||[])];payments.splice(pi,1);
+  await sb.from('debts').update({payments}).eq('id',did);
+  renderDebts();
+  setTimeout(()=>{const b=document.getElementById(`debt-body-${did}`);if(b)b.classList.add('open')},50);
+}
+
+async function deleteDebt(did){
+  if(!confirm('¿Eliminar esta deuda y todos sus pagos?'))return;
+  await sb.from('debts').delete().eq('id',did);
+  renderDebts();
+}
+
+// --- IMPORT JSON ---
+document.getElementById('file-input').addEventListener('change',async function(){
+  const file=this.files[0];if(!file)return;
+  try{
+    const txs=JSON.parse(await file.text());
+    if(!Array.isArray(txs))throw new Error('Formato invalido');
+    const emailTxs=txs.filter(t=>t.gmail_id).map(t=>({type:t.type,amount:t.amount,cat:t.cat,note:t.note,date:t.date,source:'email',gmail_id:t.gmail_id}));
+    if(!emailTxs.length){showToast('No hay transacciones de correo en el archivo');return;}
+    const{error}=await sb.from('transactions').upsert(emailTxs,{onConflict:'gmail_id',ignoreDuplicates:true});
+    if(error){showToast('Error al importar');console.error(error);return;}
+    showToast(`${emailTxs.length} transacciones importadas`);
+    renderTxs();
+  }catch(e){console.error(e);showToast('Error: '+e.message);}
+  this.value='';
+});
+
+// --- KEYBOARD ---
+document.getElementById('amount-input').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('note-input').focus()});
+document.getElementById('note-input').addEventListener('keydown',e=>{if(e.key==='Enter')addTransaction()});
+document.getElementById('debt-amount').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('debt-note').focus()});
+document.getElementById('debt-note').addEventListener('keydown',e=>{if(e.key==='Enter')addDebt()});
+
+renderCats();
+renderTxs();
+</script>
+</body>
+</html>
