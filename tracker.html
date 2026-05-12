@@ -12,6 +12,26 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .tabs{display:flex;gap:4px;margin-bottom:1.25rem;background:#1a1a1a;padding:4px;border-radius:10px;border:0.5px solid #2a2a2a}
 .tab{flex:1;padding:8px;border:none;border-radius:7px;background:transparent;cursor:pointer;font-size:13px;font-weight:500;color:#555;transition:all .15s}
 .tab.active{background:#2a2a2a;color:#e8e8e8}
+/* Accounts */
+.accounts-toggle{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#1a1a1a;border:0.5px solid #2a2a2a;border-radius:10px;cursor:pointer;margin-bottom:8px;user-select:none}
+.accounts-toggle.open{border-radius:10px 10px 0 0;border-bottom-color:#1a1a1a;margin-bottom:0}
+.accounts-toggle-label{font-size:13px;color:#666}
+.accounts-total{font-size:13px;font-weight:500;color:#e8e8e8}
+.accounts-chevron{font-size:10px;color:#444;transition:transform .2s;margin-left:6px}
+.accounts-chevron.open{transform:rotate(180deg)}
+.accounts-body{background:#1a1a1a;border:0.5px solid #2a2a2a;border-top:none;border-radius:0 0 10px 10px;padding:10px 14px 12px;margin-bottom:1.25rem;display:none}
+.accounts-body.open{display:block}
+.account-list{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.account-item{display:flex;align-items:center;gap:10px}
+.account-emoji{font-size:16px;width:22px;text-align:center;flex-shrink:0}
+.account-name{font-size:13px;color:#888;flex:1}
+.account-balance-input{font-size:14px;font-weight:500;color:#e8e8e8;background:transparent;border:none;border-bottom:0.5px solid transparent;outline:none;width:130px;text-align:right;padding:2px 0}
+.account-balance-input:focus{border-bottom-color:#444}
+.account-delete{background:none;border:none;cursor:pointer;color:#2a2a2a;font-size:16px;padding:0 2px;transition:color .12s;line-height:1}
+.account-item:hover .account-delete{color:#555}
+.add-account-row{display:flex;gap:6px;align-items:center;padding-top:10px;border-top:0.5px solid #1f1f1f}
+.emoji-input{width:42px;text-align:center;padding:7px 4px;font-size:16px;flex-shrink:0}
+/* Stats */
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1.25rem}
 .stat{background:#1a1a1a;border-radius:10px;padding:0.75rem 1rem;border:0.5px solid #2a2a2a}
 .stat-label{font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
@@ -19,6 +39,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .stat-value.income{color:#1D9E75}
 .stat-value.expense{color:#D85A30}
 .stat-value.debt{color:#C97B30}
+/* Quick add */
 .quick-add{background:#1a1a1a;border:0.5px solid #2a2a2a;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem}
 .type-toggle{display:flex;gap:6px;margin-bottom:1rem}
 .type-btn{flex:1;padding:8px;border:0.5px solid #2a2a2a;border-radius:8px;background:transparent;cursor:pointer;font-size:13px;color:#888;transition:all .15s}
@@ -37,6 +58,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .btn-primary{padding:8px 20px;border:none;border-radius:8px;background:#e8e8e8;color:#0f0f0f;font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap}
 .btn-primary:disabled{opacity:.4;cursor:default}
 .btn-primary:active:not(:disabled){opacity:.8}
+/* Toolbar */
 .toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem}
 .toolbar-left{display:flex;align-items:center;gap:8px}
 .toolbar-right{display:flex;align-items:center;gap:8px}
@@ -46,6 +68,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .import-btn:hover{background:#1a1a1a;color:#e8e8e8}
 .ghost-btn{font-size:12px;color:#444;background:none;border:none;cursor:pointer}
 .ghost-btn:hover{color:#888}
+/* Tx list */
 .tx-list{display:flex;flex-direction:column;gap:6px}
 .tx-item{display:flex;align-items:center;gap:12px;padding:10px 14px;background:#1a1a1a;border:0.5px solid #222;border-radius:10px}
 .tx-item:hover{border-color:#2a2a2a}
@@ -102,9 +125,28 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <input type="file" id="file-input" accept=".json" style="display:none">
 <div class="toast" id="toast"></div>
 <div class="app">
+
   <div class="tabs">
     <button class="tab active" onclick="switchTab('gastos')">Gastos e Ingresos</button>
     <button class="tab" onclick="switchTab('deudas')">Deudas</button>
+  </div>
+
+  <!-- SALDOS (siempre visible) -->
+  <div class="accounts-toggle" id="accounts-toggle" onclick="toggleAccounts()">
+    <span class="accounts-toggle-label">Saldos en cuentas</span>
+    <div style="display:flex;align-items:center">
+      <span class="accounts-total" id="accounts-total">$0</span>
+      <span class="accounts-chevron" id="accounts-chevron">&#9660;</span>
+    </div>
+  </div>
+  <div class="accounts-body" id="accounts-body">
+    <div class="account-list" id="account-list"></div>
+    <div class="add-account-row">
+      <input id="acc-emoji" class="text-input emoji-input" type="text" placeholder="💵" maxlength="2">
+      <input id="acc-name" class="text-input" type="text" placeholder="Bancolombia, Nu, Efectivo..." maxlength="40" style="flex:2">
+      <input id="acc-balance" class="text-input" type="number" placeholder="Saldo" min="0" style="flex:1">
+      <button class="btn-primary" onclick="addAccount()" style="font-size:14px;padding:7px 14px">+</button>
+    </div>
   </div>
 
   <!-- TAB GASTOS -->
@@ -136,7 +178,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <button class="nav-btn" onclick="changeMonth(1)">&#8250;</button>
       </div>
       <div class="toolbar-right">
-        <button class="import-btn" onclick="document.getElementById('file-input').click()">⬆ Importar JSON</button>
+        <button class="import-btn" onclick="document.getElementById('file-input').click()">&#8679; Importar JSON</button>
         <button class="ghost-btn" onclick="clearMonth()">Borrar mes</button>
       </div>
     </div>
@@ -154,7 +196,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div class="debt-add-title">Nueva deuda</div>
       <div class="debt-fields">
         <div class="debt-row">
-          <input id="debt-name" class="text-input" type="text" placeholder="Nombre (ej: Tarjeta Nu, Préstamo mamá...)" maxlength="60" style="flex:2">
+          <input id="debt-name" class="text-input" type="text" placeholder="Nombre (ej: Tarjeta Nu, Prestamo mama...)" maxlength="60" style="flex:2">
           <input id="debt-amount" class="text-input" type="number" placeholder="Monto total" min="0" style="flex:1;font-size:18px">
         </div>
         <div class="debt-row">
@@ -165,12 +207,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
     <div class="debt-list" id="debt-list"><div class="loading">Cargando...</div></div>
   </div>
-</div>
 
+</div>
 <script>
-const SUPABASE_URL = 'https://zfaueqcgrupbxjeibuwh.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpmYXVlcWNncnVwYnhqZWlidXdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2MDE4OTIsImV4cCI6MjA5NDE3Nzg5Mn0.ur6BqrJp9gSAs_2s4vq1Qd_U_9nuU6aEHNscFbBgrTY';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const SUPABASE_URL='https://zfaueqcgrupbxjeibuwh.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpmYXVlcWNncnVwYnhqZWlidXdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2MDE4OTIsImV4cCI6MjA5NDE3Nzg5Mn0.ur6BqrJp9gSAs_2s4vq1Qd_U_9nuU6aEHNscFbBgrTY';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 const CATS={
   expense:[
@@ -192,6 +234,7 @@ function fmtMoney(n){return'$'+Math.round(n).toLocaleString('es-CO')}
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800)}
 function setLoading(id,val){const b=document.getElementById(id);if(b)b.disabled=val}
 
+// --- TABS ---
 function switchTab(tab){
   document.getElementById('tab-gastos').style.display=tab==='gastos'?'block':'none';
   document.getElementById('tab-deudas').style.display=tab==='deudas'?'block':'none';
@@ -199,6 +242,62 @@ function switchTab(tab){
   if(tab==='deudas')renderDebts();
 }
 
+// --- ACCOUNTS ---
+function toggleAccounts(){
+  const body=document.getElementById('accounts-body');
+  const toggle=document.getElementById('accounts-toggle');
+  const chevron=document.getElementById('accounts-chevron');
+  const open=body.classList.toggle('open');
+  toggle.classList.toggle('open',open);
+  chevron.classList.toggle('open',open);
+}
+
+async function renderAccounts(){
+  const{data:accounts,error}=await sb.from('accounts').select('*').order('created_at',{ascending:true});
+  if(error){console.error(error);return;}
+  const total=(accounts||[]).reduce((s,a)=>s+a.balance,0);
+  document.getElementById('accounts-total').textContent=fmtMoney(total);
+  const list=document.getElementById('account-list');
+  list.innerHTML='';
+  (accounts||[]).forEach(acc=>{
+    const div=document.createElement('div');div.className='account-item';
+    div.innerHTML=`
+      <span class="account-emoji">${acc.emoji||'🏦'}</span>
+      <span class="account-name">${acc.name}</span>
+      <input class="account-balance-input" type="number" value="${acc.balance}" min="0"
+        onblur="updateAccountBalance('${acc.id}',this.value)"
+        onkeydown="if(event.key==='Enter')this.blur()">
+      <button class="account-delete" onclick="deleteAccount('${acc.id}')">x</button>`;
+    list.appendChild(div);
+  });
+}
+
+async function addAccount(){
+  const emoji=document.getElementById('acc-emoji').value.trim()||'🏦';
+  const name=document.getElementById('acc-name').value.trim();
+  const balance=parseFloat(document.getElementById('acc-balance').value)||0;
+  if(!name){document.getElementById('acc-name').focus();return;}
+  const{error}=await sb.from('accounts').insert({emoji,name,balance});
+  if(error){showToast('Error al guardar');return;}
+  document.getElementById('acc-emoji').value='';
+  document.getElementById('acc-name').value='';
+  document.getElementById('acc-balance').value='';
+  renderAccounts();
+}
+
+async function updateAccountBalance(id,val){
+  const balance=parseFloat(val)||0;
+  await sb.from('accounts').update({balance,updated_at:new Date().toISOString()}).eq('id',id);
+  renderAccounts();
+}
+
+async function deleteAccount(id){
+  if(!confirm('Eliminar esta cuenta?'))return;
+  await sb.from('accounts').delete().eq('id',id);
+  renderAccounts();
+}
+
+// --- GASTOS ---
 function setType(t){
   currentType=t;
   document.getElementById('btn-expense').className='type-btn'+(t==='expense'?' active-expense':'');
@@ -220,12 +319,10 @@ async function renderTxs(){
   const months=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
   document.getElementById('month-label').textContent=months[viewMonth]+' '+viewYear;
   document.getElementById('tx-list').innerHTML='<div class="loading">Cargando...</div>';
-
   const start=new Date(viewYear,viewMonth,1).toISOString();
   const end=new Date(viewYear,viewMonth+1,1).toISOString();
   const{data:txs,error}=await sb.from('transactions').select('*').gte('date',start).lt('date',end).order('date',{ascending:true});
-  if(error){showToast('Error al cargar');console.error(error);return;}
-
+  if(error){showToast('Error al cargar');return;}
   let inc=0,exp=0;
   txs.forEach(t=>t.type==='income'?inc+=t.amount:exp+=t.amount);
   const bal=inc-exp;
@@ -233,7 +330,6 @@ async function renderTxs(){
   document.getElementById('stat-expenses').textContent=fmtMoney(exp);
   const bEl=document.getElementById('stat-balance');
   bEl.textContent=fmtMoney(bal);bEl.style.color=bal>=0?'#1D9E75':'#D85A30';
-
   const list=document.getElementById('tx-list');
   if(!txs.length){list.innerHTML='<div class="empty">Sin movimientos este mes</div>';return;}
   list.innerHTML='';
@@ -242,7 +338,7 @@ async function renderTxs(){
     const d=new Date(tx.date).toLocaleDateString('es-CO',{day:'numeric',month:'short'});
     const eb=tx.source==='email'?'<span class="badge email">correo</span>':'';
     const div=document.createElement('div');div.className='tx-item';
-    div.innerHTML=`<div class="tx-icon">${cat.icon}</div><div class="tx-info"><div class="tx-desc">${tx.note||cat.label}</div><div class="tx-meta"><span>${d}</span><span class="badge">${cat.label}</span>${eb}</div></div><span class="tx-amount ${tx.type}">${tx.type==='income'?'+':'-'}${fmtMoney(tx.amount)}</span><button class="row-delete" onclick="deleteTx('${tx.id}')">×</button>`;
+    div.innerHTML=`<div class="tx-icon">${cat.icon}</div><div class="tx-info"><div class="tx-desc">${tx.note||cat.label}</div><div class="tx-meta"><span>${d}</span><span class="badge">${cat.label}</span>${eb}</div></div><span class="tx-amount ${tx.type}">${tx.type==='income'?'+':'-'}${fmtMoney(tx.amount)}</span><button class="row-delete" onclick="deleteTx('${tx.id}')">x</button>`;
     list.appendChild(div);
   });
 }
@@ -254,7 +350,7 @@ async function addTransaction(){
   setLoading('add-tx-btn',true);
   const{error}=await sb.from('transactions').insert({type:currentType,amount:amt,cat:selectedCat,note,date:new Date().toISOString(),source:'manual'});
   setLoading('add-tx-btn',false);
-  if(error){showToast('Error al guardar');console.error(error);return;}
+  if(error){showToast('Error al guardar');return;}
   document.getElementById('amount-input').value='';
   document.getElementById('note-input').value='';
   document.getElementById('amount-input').focus();
@@ -262,13 +358,12 @@ async function addTransaction(){
 }
 
 async function deleteTx(id){
-  const{error}=await sb.from('transactions').delete().eq('id',id);
-  if(error){showToast('Error al eliminar');return;}
+  await sb.from('transactions').delete().eq('id',id);
   renderTxs();
 }
 
 async function clearMonth(){
-  if(!confirm('¿Borrar todos los movimientos de este mes?'))return;
+  if(!confirm('Borrar todos los movimientos de este mes?'))return;
   const start=new Date(viewYear,viewMonth,1).toISOString();
   const end=new Date(viewYear,viewMonth+1,1).toISOString();
   await sb.from('transactions').delete().gte('date',start).lt('date',end);
@@ -287,25 +382,21 @@ async function renderDebts(){
   document.getElementById('debt-list').innerHTML='<div class="loading">Cargando...</div>';
   const{data:debts,error}=await sb.from('debts').select('*').order('created_at',{ascending:true});
   if(error){showToast('Error al cargar deudas');return;}
-
   let tot=0,paid=0;
   debts.forEach(d=>{tot+=d.total;paid+=(d.payments||[]).reduce((s,p)=>s+p.amount,0)});
   document.getElementById('debt-total').textContent=fmtMoney(tot);
   document.getElementById('debt-paid-stat').textContent=fmtMoney(paid);
   document.getElementById('debt-pending').textContent=fmtMoney(Math.max(0,tot-paid));
-
   const list=document.getElementById('debt-list');
   if(!debts.length){list.innerHTML='<div class="empty">Sin deudas registradas</div>';return;}
   list.innerHTML='';
-
-  debts.forEach((debt)=>{
+  debts.forEach(debt=>{
     const paidAmt=(debt.payments||[]).reduce((s,p)=>s+p.amount,0);
     const remaining=Math.max(0,debt.total-paidAmt);
     const pct=Math.min(100,Math.round(paidAmt/debt.total*100));
     const isPaid=remaining<=0;
-    const card=document.createElement('div');
-    card.className='debt-card'+(isPaid?' paid':'');
     const did=debt.id;
+    const card=document.createElement('div');card.className='debt-card'+(isPaid?' paid':'');
     card.innerHTML=`
       <div class="debt-header" onclick="toggleDebt('${did}')">
         <div class="debt-emoji">${isPaid?'✅':'💳'}</div>
@@ -332,16 +423,14 @@ async function renderDebts(){
         </div>
       </div>`;
     list.appendChild(card);
-
     const pList=card.querySelector(`#payments-${did}`);
     (debt.payments||[]).slice().reverse().forEach((p,rpi)=>{
-      const pi=(debt.payments.length-1-rpi);
+      const pi=debt.payments.length-1-rpi;
       const d=new Date(p.date).toLocaleDateString('es-CO',{day:'numeric',month:'short'});
       const pDiv=document.createElement('div');pDiv.className='payment-item';
-      pDiv.innerHTML=`<span class="payment-date">${d}</span><span class="payment-note">${p.note||'Pago'}</span><span class="payment-amount">+${fmtMoney(p.amount)}</span><button class="row-delete" onclick="deletePayment('${did}',${pi})">×</button>`;
+      pDiv.innerHTML=`<span class="payment-date">${d}</span><span class="payment-note">${p.note||'Pago'}</span><span class="payment-amount">+${fmtMoney(p.amount)}</span><button class="row-delete" onclick="deletePayment('${did}',${pi})">x</button>`;
       pList.appendChild(pDiv);
     });
-
     card.querySelector(`#pay-amt-${did}`).addEventListener('keydown',e=>{if(e.key==='Enter')card.querySelector(`#pay-note-${did}`).focus()});
     card.querySelector(`#pay-note-${did}`).addEventListener('keydown',e=>{if(e.key==='Enter')addPayment(did)});
   });
@@ -357,7 +446,7 @@ async function addDebt(){
   setLoading('add-debt-btn',true);
   const{error}=await sb.from('debts').insert({name,total:amt,note,date:new Date().toISOString(),payments:[]});
   setLoading('add-debt-btn',false);
-  if(error){showToast('Error al guardar');console.error(error);return;}
+  if(error){showToast('Error al guardar');return;}
   document.getElementById('debt-name').value='';
   document.getElementById('debt-amount').value='';
   document.getElementById('debt-note').value='';
@@ -368,19 +457,18 @@ async function addPayment(did){
   const amt=parseFloat(document.getElementById(`pay-amt-${did}`).value);
   const note=document.getElementById(`pay-note-${did}`).value.trim();
   if(!amt||amt<=0){document.getElementById(`pay-amt-${did}`).focus();return;}
-  const{data:debt,error:fetchErr}=await sb.from('debts').select('payments').eq('id',did).single();
-  if(fetchErr){showToast('Error');return;}
+  const{data:debt,error:fe}=await sb.from('debts').select('payments').eq('id',did).single();
+  if(fe){showToast('Error');return;}
   const payments=[...(debt.payments||[]),{amount:amt,note,date:new Date().toISOString()}];
-  const{error}=await sb.from('debts').update({payments}).eq('id',did);
-  if(error){showToast('Error al guardar pago');return;}
+  await sb.from('debts').update({payments}).eq('id',did);
   renderDebts();
   setTimeout(()=>{const b=document.getElementById(`debt-body-${did}`);if(b)b.classList.add('open')},50);
 }
 
 async function deletePayment(did,pi){
-  if(!confirm('¿Eliminar este pago?'))return;
-  const{data:debt,error:fetchErr}=await sb.from('debts').select('payments').eq('id',did).single();
-  if(fetchErr){showToast('Error');return;}
+  if(!confirm('Eliminar este pago?'))return;
+  const{data:debt,error:fe}=await sb.from('debts').select('payments').eq('id',did).single();
+  if(fe){showToast('Error');return;}
   const payments=[...(debt.payments||[])];payments.splice(pi,1);
   await sb.from('debts').update({payments}).eq('id',did);
   renderDebts();
@@ -388,7 +476,7 @@ async function deletePayment(did,pi){
 }
 
 async function deleteDebt(did){
-  if(!confirm('¿Eliminar esta deuda y todos sus pagos?'))return;
+  if(!confirm('Eliminar esta deuda y todos sus pagos?'))return;
   await sb.from('debts').delete().eq('id',did);
   renderDebts();
 }
@@ -400,7 +488,7 @@ document.getElementById('file-input').addEventListener('change',async function()
     const txs=JSON.parse(await file.text());
     if(!Array.isArray(txs))throw new Error('Formato invalido');
     const emailTxs=txs.filter(t=>t.gmail_id).map(t=>({type:t.type,amount:t.amount,cat:t.cat,note:t.note,date:t.date,source:'email',gmail_id:t.gmail_id}));
-    if(!emailTxs.length){showToast('No hay transacciones de correo en el archivo');return;}
+    if(!emailTxs.length){showToast('No hay transacciones de correo');return;}
     const{error}=await sb.from('transactions').upsert(emailTxs,{onConflict:'gmail_id',ignoreDuplicates:true});
     if(error){showToast('Error al importar');console.error(error);return;}
     showToast(`${emailTxs.length} transacciones importadas`);
@@ -414,9 +502,13 @@ document.getElementById('amount-input').addEventListener('keydown',e=>{if(e.key=
 document.getElementById('note-input').addEventListener('keydown',e=>{if(e.key==='Enter')addTransaction()});
 document.getElementById('debt-amount').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('debt-note').focus()});
 document.getElementById('debt-note').addEventListener('keydown',e=>{if(e.key==='Enter')addDebt()});
+document.getElementById('acc-name').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('acc-balance').focus()});
+document.getElementById('acc-balance').addEventListener('keydown',e=>{if(e.key==='Enter')addAccount()});
 
+// --- INIT ---
 renderCats();
 renderTxs();
+renderAccounts();
 </script>
 </body>
 </html>
