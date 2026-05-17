@@ -29,8 +29,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .account-name{font-size:13px;color:#888;flex:1}
 .account-balance-input{font-size:14px;font-weight:500;color:#e8e8e8;background:transparent;border:none;border-bottom:0.5px solid transparent;outline:none;width:130px;text-align:right;padding:2px 0}
 .account-balance-input:focus{border-bottom-color:#444}
-.account-delete{background:none;border:none;cursor:pointer;color:#2a2a2a;font-size:16px;padding:0 2px;transition:color .12s;line-height:1}
-.account-item:hover .account-delete{color:#555}
+.account-delete{background:none;border:none;cursor:pointer;color:#D85A30;font-size:16px;padding:0 2px;transition:color .12s;line-height:1;display:none}
+.edit-mode .account-delete{display:inline-block}
 .account-history-toggle{background:none;border:none;cursor:pointer;color:#555;font-size:11px;padding:0 4px;transition:color .12s}
 .account-item:hover .account-history-toggle{color:#999}
 .account-history{display:none;padding:6px 0 2px 32px;border-top:0.5px solid #1f1f1f;margin-top:6px}
@@ -40,8 +40,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .history-date{color:#444;flex-shrink:0;min-width:70px}
 .history-note{color:#666;flex:1}
 .history-balance{color:#888;font-weight:500;flex-shrink:0}
-.update-balance-form{display:flex;gap:6px;align-items:center;padding:8px 0 4px}
-.update-balance-form input{padding:5px 8px;font-size:13px}
+.history-note-input{background:transparent;border:none;border-bottom:0.5px solid #2a2a2a;color:#888;font-size:12px;outline:none;padding:2px 4px;width:120px}
+.history-note-input:focus{border-bottom-color:#444}
 .add-account-row{display:flex;gap:6px;align-items:center;padding-top:10px;border-top:0.5px solid #1f1f1f}
 .emoji-input{width:42px;text-align:center;padding:7px 4px;font-size:16px;flex-shrink:0}
 /* Stats */
@@ -113,9 +113,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .tx-amount.expense{color:#D85A30}
 .tx-arrow{background:none;border:none;cursor:pointer;color:#444;font-size:13px;padding:0 4px;line-height:1;transition:transform .2s;flex-shrink:0}
 .tx-arrow.open{transform:rotate(90deg)}
-.row-delete{background:none;border:none;cursor:pointer;color:#333;font-size:18px;padding:0 4px;line-height:1;opacity:0;transition:opacity .12s}
-.tx-wrap:hover .row-delete,.payment-item:hover .row-delete{opacity:1}
-.row-delete:hover{color:#888}
+.row-delete{background:none;border:none;cursor:pointer;color:#D85A30;font-size:18px;padding:0 4px;line-height:1;opacity:0;pointer-events:none;transition:opacity .12s}
+.edit-mode .row-delete{opacity:1;pointer-events:auto}
+.edit-mode .row-delete:hover{color:#ff6b4a}
 /* Tx edit panel */
 .tx-edit{display:none;padding:10px 14px 12px;border-top:0.5px solid #1f1f1f}
 .tx-edit.open{display:block}
@@ -195,7 +195,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <!-- SALDOS -->
   <div class="accounts-toggle" id="accounts-toggle" onclick="toggleAccounts()">
     <span class="accounts-toggle-label">Saldos en cuentas</span>
-    <div style="display:flex;align-items:center">
+    <div style="display:flex;align-items:center;gap:10px">
+      <button id="edit-mode-btn" onclick="event.stopPropagation();toggleEditMode()" style="background:none;border:none;cursor:pointer;color:#444;font-size:12px;padding:2px 6px;transition:color .15s">Editar</button>
       <span class="accounts-total" id="accounts-total">$0</span>
       <span class="accounts-chevron" id="accounts-chevron">&#9660;</span>
     </div>
@@ -438,17 +439,14 @@ async function renderAccounts(){
       <div class="account-item">
         <span class="account-emoji">${acc.emoji||'🏦'}</span>
         <span class="account-name">${acc.name}</span>
-        <span style="font-size:14px;font-weight:500;color:#e8e8e8;margin-left:auto">${fmtMoney(acc.balance)}</span>
+        <input class="account-balance-input" type="number" value="${acc.balance}" data-prev="${acc.balance}"
+          onblur="saveAccountBalance(this,'${acc.id}')"
+          onkeydown="if(event.key==='Enter'){this.blur();event.preventDefault()}">
         <button class="account-history-toggle" onclick="toggleAccHistory('hist-${acc.id}')">historial</button>
-        <button class="account-delete" onclick="deleteAccount('${acc.id}')">x</button>
+        <button class="account-delete" onclick="deleteAccount('${acc.id}')">×</button>
       </div>
       <div class="account-history" id="hist-${acc.id}">
-        <div class="update-balance-form">
-          <input id="newbal-${acc.id}" class="text-input" type="number" placeholder="Nuevo saldo" min="0" style="flex:1;font-size:13px;padding:5px 8px">
-          <input id="newnote-${acc.id}" class="text-input" type="text" placeholder="Nota (ej: corte mayo)" maxlength="50" style="flex:1.5;font-size:13px;padding:5px 8px">
-          <button class="btn-primary" onclick="updateAccountBalance('${acc.id}')" style="font-size:12px;padding:5px 12px">Guardar</button>
-        </div>
-        <div style="max-height:150px;overflow-y:auto">${historyRows||'<div style="color:#444;font-size:12px;padding:4px 0">Sin historial</div>'}</div>
+        <div style="max-height:200px;overflow-y:auto">${historyRows||'<div style="color:#444;font-size:12px;padding:4px 0">Sin historial aún — edita el saldo para registrar</div>'}</div>
       </div>`;
     list.appendChild(wrap);
   }
@@ -469,17 +467,36 @@ async function addAccount(){
   document.getElementById('acc-balance').value='';
   renderAccounts();
 }
-async function updateAccountBalance(id){
-  const balance=parseFloat(document.getElementById('newbal-'+id).value);
-  if(isNaN(balance)||balance<0){document.getElementById('newbal-'+id).focus();return;}
-  const note=document.getElementById('newnote-'+id).value.trim();
-  const{error:e1}=await sb.from('accounts').update({balance,updated_at:new Date().toISOString()}).eq('id',id);
-  const{error:e2}=await sb.from('account_history').insert({account_id:id,balance,note});
-  if(e1||e2){showToast('Error al guardar');console.error(e1||e2);return;}
-  showToast('Saldo actualizado');
-  await renderAccounts();
+let editMode=false;
+function toggleEditMode(){
+  editMode=!editMode;
+  document.body.classList.toggle('edit-mode',editMode);
+  const btn=document.getElementById('edit-mode-btn');
+  if(btn){btn.textContent=editMode?'Listo':'Editar';btn.style.color=editMode?'#D85A30':'#444';}
+}
+async function saveAccountBalance(input,id){
+  const balance=parseFloat(input.value);
+  const prev=parseFloat(input.dataset.prev);
+  if(isNaN(balance)||balance<0){input.value=prev;return;}
+  if(balance===prev)return;
+  const{error:e1}=await sb.from('accounts').update({balance}).eq('id',id);
+  if(e1){showToast('Error al guardar');console.error(e1);input.value=prev;return;}
+  const{error:e2}=await sb.from('account_history').insert({account_id:id,balance,note:''});
+  if(e2)console.error('history insert:',e2);
+  input.dataset.prev=balance;
+  let total=0;document.querySelectorAll('.account-balance-input').forEach(i=>total+=parseFloat(i.value)||0);
+  document.getElementById('accounts-total').textContent=fmtMoney(total);
+  showToast('Saldo guardado');
+  const{data:history}=await sb.from('account_history').select('*').eq('account_id',id).order('recorded_at',{ascending:false}).limit(10);
   const panel=document.getElementById('hist-'+id);
-  if(panel)panel.classList.add('open');
+  if(panel){
+    const rows=(history||[]).map(h=>{
+      const d=new Date(h.recorded_at).toLocaleDateString('es-CO',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+      return `<div class="history-item"><span class="history-date">${d}</span><span class="history-note">${h.note||''}</span><span class="history-balance">${fmtMoney(h.balance)}</span></div>`;
+    }).join('');
+    panel.querySelector('div').innerHTML=rows||'<div style="color:#444;font-size:12px;padding:4px 0">Sin historial aún</div>';
+    panel.classList.add('open');
+  }
 }
 async function deleteAccount(id){
   if(!confirm('Eliminar esta cuenta?'))return;
