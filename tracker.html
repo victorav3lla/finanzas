@@ -74,6 +74,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .tx-list{display:flex;flex-direction:column;gap:6px}
 .tx-item{display:flex;align-items:center;gap:12px;padding:10px 14px;background:#1a1a1a;border:0.5px solid #222;border-radius:10px}
 .tx-item:hover{border-color:#2a2a2a}
+.tx-wrap{background:#1a1a1a;border:0.5px solid #222;border-radius:10px;overflow:hidden;margin-bottom:0}
+.tx-wrap.expanded{border-color:#333}
+.tx-row{display:flex;align-items:center;gap:12px;padding:10px 14px;cursor:pointer}
+.tx-edit{display:none;padding:10px 14px 12px;border-top:0.5px solid #1f1f1f}
+.tx-edit.open{display:block}
+.tx-edit-cats{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
+.tx-edit-cats .cat-btn{font-size:11px;padding:4px 8px}
+.tx-edit-row{display:flex;gap:6px;align-items:center}
+.tx-edit-type{display:flex;gap:4px;flex-shrink:0}
+.tx-edit-type button{padding:4px 10px;border:0.5px solid #2a2a2a;border-radius:6px;background:transparent;cursor:pointer;font-size:12px;color:#555;font-family:inherit}
+.tx-edit-type button.active-exp{background:rgba(216,90,48,.15);border-color:#D85A30;color:#D85A30}
+.tx-edit-type button.active-inc{background:rgba(29,158,117,.15);border-color:#1D9E75;color:#1D9E75}
 .tx-icon{width:34px;height:34px;border-radius:8px;background:#242424;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
 .tx-info{flex:1;min-width:0}
 .tx-desc{font-size:14px;color:#e8e8e8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -373,12 +385,36 @@ async function renderTxs(){
   if(!txs.length){list.innerHTML='<div class="empty">Sin movimientos este mes</div>';return;}
   list.innerHTML='';
   [...txs].reverse().forEach(tx=>{
-    const cat=ALL_CATS.find(c=>c.id===tx.cat)||{icon:'📦',label:'Otro'};
+    const cat=ALL_CATS.find(c=>c.id===tx.cat)||{icon:'📦',label:'Otro',color:'#888'};
     const d=new Date(tx.date).toLocaleDateString('es-CO',{day:'numeric',month:'short'});
     const eb=tx.source==='email'?'<span class="badge email">correo</span>':'';
-    const div=document.createElement('div');div.className='tx-item';
-    div.innerHTML=`<div class="tx-icon">${cat.icon}</div><div class="tx-info"><div class="tx-desc">${tx.note||cat.label}</div><div class="tx-meta"><span>${d}</span><span class="badge">${cat.label}</span>${eb}</div></div><span class="tx-amount ${tx.type}">${tx.type==='income'?'+':'-'}${fmtMoney(tx.amount)}</span><button class="row-delete" onclick="deleteTx('${tx.id}')">x</button>`;
-    list.appendChild(div);
+    const wrap=document.createElement('div');wrap.className='tx-wrap';
+
+    // Edit cats HTML
+    const allCatBtns=ALL_CATS.map(c=>`<button class="cat-btn${c.id===tx.cat?' selected':''}" onclick="updateTxCat('${tx.id}','${c.id}',this)">${c.icon} ${c.label}</button>`).join('');
+
+    wrap.innerHTML=`
+      <div class="tx-row" onclick="toggleTxEdit(this)">
+        <div class="tx-icon">${cat.icon}</div>
+        <div class="tx-info">
+          <div class="tx-desc">${tx.note||cat.label}</div>
+          <div class="tx-meta"><span>${d}</span><span class="badge">${cat.label}</span>${eb}</div>
+        </div>
+        <span class="tx-amount ${tx.type}">${tx.type==='income'?'+':'-'}${fmtMoney(tx.amount)}</span>
+        <button class="row-delete" onclick="event.stopPropagation();deleteTx('${tx.id}')">x</button>
+      </div>
+      <div class="tx-edit" id="txedit-${tx.id}">
+        <div class="tx-edit-cats">${allCatBtns}</div>
+        <div class="tx-edit-row">
+          <div class="tx-edit-type">
+            <button id="ttype-exp-${tx.id}" class="${tx.type==='expense'?'active-exp':''}" onclick="updateTxType('${tx.id}','expense')">Gasto</button>
+            <button id="ttype-inc-${tx.id}" class="${tx.type==='income'?'active-inc':''}" onclick="updateTxType('${tx.id}','income')">Ingreso</button>
+          </div>
+          <input class="text-input" id="tnote-${tx.id}" type="text" value="${(tx.note||'').replace(/"/g,'&quot;')}" placeholder="Nota..." maxlength="60" style="font-size:13px;padding:6px 10px" onkeydown="if(event.key==='Enter')updateTxNote('${tx.id}',this.value)">
+          <button class="btn-primary" onclick="updateTxNote('${tx.id}',document.getElementById('tnote-${tx.id}').value)" style="font-size:12px;padding:6px 12px">OK</button>
+        </div>
+      </div>`;
+    list.appendChild(wrap);
   });
 }
 async function addTransaction(){
@@ -396,6 +432,27 @@ async function addTransaction(){
 }
 async function deleteTx(id){
   await sb.from('transactions').delete().eq('id',id);
+  renderTxs();
+}
+function toggleTxEdit(row){
+  const edit=row.nextElementSibling;
+  const wrap=row.parentElement;
+  const isOpen=edit.classList.toggle('open');
+  wrap.classList.toggle('expanded',isOpen);
+}
+async function updateTxCat(id,catId,btn){
+  await sb.from('transactions').update({cat:catId}).eq('id',id);
+  const panel=document.getElementById('txedit-'+id);
+  panel.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  renderTxs();
+}
+async function updateTxType(id,type){
+  await sb.from('transactions').update({type}).eq('id',id);
+  renderTxs();
+}
+async function updateTxNote(id,note){
+  await sb.from('transactions').update({note}).eq('id',id);
   renderTxs();
 }
 async function clearMonth(){
