@@ -31,6 +31,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .account-balance-input:focus{border-bottom-color:#444}
 .account-delete{background:none;border:none;cursor:pointer;color:#2a2a2a;font-size:16px;padding:0 2px;transition:color .12s;line-height:1}
 .account-item:hover .account-delete{color:#555}
+.account-history-toggle{background:none;border:none;cursor:pointer;color:#333;font-size:11px;padding:0 4px;transition:color .12s}
+.account-item:hover .account-history-toggle{color:#666}
+.account-history{display:none;padding:6px 0 2px 32px;border-top:0.5px solid #1f1f1f;margin-top:6px}
+.account-history.open{display:block}
+.history-item{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:12px;border-bottom:0.5px solid #1a1a1a}
+.history-item:last-child{border-bottom:none}
+.history-date{color:#444;flex-shrink:0;min-width:70px}
+.history-note{color:#666;flex:1}
+.history-balance{color:#888;font-weight:500;flex-shrink:0}
+.update-balance-form{display:flex;gap:6px;align-items:center;padding:8px 0 4px}
+.update-balance-form input{padding:5px 8px;font-size:13px}
 .add-account-row{display:flex;gap:6px;align-items:center;padding-top:10px;border-top:0.5px solid #1f1f1f}
 .emoji-input{width:42px;text-align:center;padding:7px 4px;font-size:16px;flex-shrink:0}
 /* Stats */
@@ -416,11 +427,35 @@ async function renderAccounts(){
   const total=(accounts||[]).reduce((s,a)=>s+a.balance,0);
   document.getElementById('accounts-total').textContent=fmtMoney(total);
   const list=document.getElementById('account-list');list.innerHTML='';
-  (accounts||[]).forEach(acc=>{
-    const div=document.createElement('div');div.className='account-item';
-    div.innerHTML=`<span class="account-emoji">${acc.emoji||'🏦'}</span><span class="account-name">${acc.name}</span><input class="account-balance-input" type="number" value="${acc.balance}" min="0" onblur="updateAccountBalance('${acc.id}',this.value)" onkeydown="if(event.key==='Enter')this.blur()"><button class="account-delete" onclick="deleteAccount('${acc.id}')">x</button>`;
-    list.appendChild(div);
-  });
+  for(const acc of (accounts||[])){
+    const{data:history}=await sb.from('account_history').select('*').eq('account_id',acc.id).order('recorded_at',{ascending:false}).limit(10);
+    const wrap=document.createElement('div');wrap.style.borderBottom='0.5px solid #1f1f1f';wrap.style.paddingBottom='8px';wrap.style.marginBottom='4px';
+    const historyRows=(history||[]).map(h=>{
+      const d=new Date(h.recorded_at).toLocaleDateString('es-CO',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+      return `<div class="history-item"><span class="history-date">${d}</span><span class="history-note">${h.note||''}</span><span class="history-balance">${fmtMoney(h.balance)}</span></div>`;
+    }).join('');
+    wrap.innerHTML=`
+      <div class="account-item">
+        <span class="account-emoji">${acc.emoji||'🏦'}</span>
+        <span class="account-name">${acc.name}</span>
+        <span style="font-size:14px;font-weight:500;color:#e8e8e8;margin-left:auto">${fmtMoney(acc.balance)}</span>
+        <button class="account-history-toggle" onclick="toggleAccHistory('hist-${acc.id}')">historial</button>
+        <button class="account-delete" onclick="deleteAccount('${acc.id}')">x</button>
+      </div>
+      <div class="account-history" id="hist-${acc.id}">
+        <div class="update-balance-form">
+          <input id="newbal-${acc.id}" class="text-input" type="number" placeholder="Nuevo saldo" min="0" style="flex:1;font-size:13px;padding:5px 8px">
+          <input id="newnote-${acc.id}" class="text-input" type="text" placeholder="Nota (ej: corte mayo)" maxlength="50" style="flex:1.5;font-size:13px;padding:5px 8px">
+          <button class="btn-primary" onclick="updateAccountBalance('${acc.id}')" style="font-size:12px;padding:5px 12px">Guardar</button>
+        </div>
+        <div style="max-height:150px;overflow-y:auto">${historyRows||'<div style="color:#444;font-size:12px;padding:4px 0">Sin historial</div>'}</div>
+      </div>`;
+    list.appendChild(wrap);
+  }
+}
+
+function toggleAccHistory(id){
+  document.getElementById(id).classList.toggle('open');
 }
 async function addAccount(){
   const emoji=document.getElementById('acc-emoji').value.trim()||'🏦';
@@ -434,9 +469,13 @@ async function addAccount(){
   document.getElementById('acc-balance').value='';
   renderAccounts();
 }
-async function updateAccountBalance(id,val){
-  const balance=parseFloat(val)||0;
+async function updateAccountBalance(id){
+  const balance=parseFloat(document.getElementById('newbal-'+id).value);
+  if(isNaN(balance)||balance<0){document.getElementById('newbal-'+id).focus();return;}
+  const note=document.getElementById('newnote-'+id).value.trim();
   await sb.from('accounts').update({balance,updated_at:new Date().toISOString()}).eq('id',id);
+  await sb.from('account_history').insert({account_id:id,balance,note});
+  showToast('Saldo actualizado');
   renderAccounts();
 }
 async function deleteAccount(id){

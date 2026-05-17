@@ -1,0 +1,848 @@
+[
+  {
+    "type": "expense",
+    "amount": 26000,
+    "note": "Mercadopago Colombia S A",
+    "cat": "otro",
+    "date": "2026-05-12T12:50:37",
+    "source": "email",
+    "gmail_id": "19e1d5003041c6b5"
+  },
+  {
+    "type": "expense",
+    "amount": 31000,
+    "note": "Transferencia a cuenta *3142910511",
+    "cat": "otro",
+    "date": "2026-05-10T13:10:00",
+    "source": "email",
+    "gmail_id": "19e1315369884a1e"
+  },
+  {
+    "type": "expense",
+    "amount": 40882,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-05-10T03:42:03",
+    "source": "email",
+    "gmail_id": "19e110d0409df58e"
+  },
+  {
+    "type": "expense",
+    "amount": 200000,
+    "note": "Transferencia a Daniel Silva",
+    "cat": "otro",
+    "date": "2026-05-09T20:28:00",
+    "source": "email",
+    "gmail_id": "19e0f802b1298f1a"
+  },
+  {
+    "type": "expense",
+    "amount": 25720,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-05-08T22:20:59",
+    "source": "email",
+    "gmail_id": "19e0ac0b46909d79"
+  },
+  {
+    "type": "expense",
+    "amount": 37069,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-05-08T20:10:02",
+    "source": "email",
+    "gmail_id": "19e0a48d31f69bcc"
+  },
+  {
+    "type": "expense",
+    "amount": 22598,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-05-08T20:07:07",
+    "source": "email",
+    "gmail_id": "19e0a4626e979cdc"
+  },
+  {
+    "type": "expense",
+    "amount": 21200,
+    "note": "DLO*DIDI",
+    "cat": "transport",
+    "date": "2026-05-08T20:05:25",
+    "source": "email",
+    "gmail_id": "19e0a4494d52bfc1"
+  },
+  {
+    "type": "expense",
+    "amount": 300,
+    "note": "DLO*DIDI CO PAYIN (REG",
+    "cat": "transport",
+    "date": "2026-05-08T20:03:12",
+    "source": "email",
+    "gmail_id": "19e0a42902cc4c84"
+  },
+  {
+    "type": "expense",
+    "amount": 29513,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-05-07T21:33:08",
+    "source": "email",
+    "gmail_id": "19e056e893a86004"
+  },
+  {
+    "type": "expense",
+    "amount": 22832,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-05-07T21:29:37",
+    "source": "email",
+    "gmail_id": "19e056b506ff7c12"
+  },
+  {
+    "type": "expense",
+    "amount": 6768,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-05-07T15:50:57",
+    "source": "email",
+    "gmail_id": "19e043543180e63b"
+  },
+  {
+    "type": "expense",
+    "amount": 14709,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-05-07T13:55:27",
+    "source": "email",
+    "gmail_id": "19e03cb855999600"
+  },
+  {
+    "type": "expense",
+    "amount": 14460,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-05-07T13:35:57",
+    "source": "email",
+    "gmail_id": "19e03b9a80862777"
+  },
+  {
+    "type": "expense",
+    "amount": 152000,
+    "note": "Transferencia",
+    "cat": "otro",
+    "date": "2026-05-05T21:29:00",
+    "source": "email",
+    "gmail_id": "19dfb1f58788fe02"
+  },
+  {
+    "type": "income",
+    "amount": 1662250,
+    "note": "Transferencia de DIANA RAMIREZ",
+    "cat": "otro",
+    "date": "2026-05-05T13:35:00",
+    "source": "email",
+    "gmail_id": "19df96c6c86b7333"
+  },
+  {
+    "type": "expense",
+    "amount": 10727,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-05-05T12:01:26",
+    "source": "email",
+    "gmail_id": "19df9166ad02012f"
+  },
+  {
+    "type": "expense",
+    "amount": 8558,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-05-05T11:56:54",
+    "source": "email",
+    "gmail_id": "19df91243898c561"
+  },
+  {
+    "type": "expense",
+    "amount": 12068,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-05-04T13:53:44",
+    "source": "email",
+    "gmail_id": "19df456ddae2c04a"
+  },
+  {
+    "type": "expense",
+    "amount": 13879,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-05-04T13:28:55",
+    "source": "email",
+    "gmail_id": "19df44026ad95936"
+  },
+  {
+    "type": "expense",
+    "amount": 12797,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-05-04T12:47:37",
+    "source": "email",
+    "gmail_id": "19df41a566729142"
+  },
+  {
+    "type": "income",
+    "amount": 67500,
+    "note": "Transferencia de FEDERICO JARAMILLO",
+    "cat": "otro",
+    "date": "2026-05-04T11:51:00",
+    "source": "email",
+    "gmail_id": "19df3e6a7d305130"
+  },
+  {
+    "type": "expense",
+    "amount": 9000,
+    "note": "Transferencia",
+    "cat": "otro",
+    "date": "2026-05-03T13:55:00",
+    "source": "email",
+    "gmail_id": "19def327a5242b01"
+  },
+  {
+    "type": "expense",
+    "amount": 48133,
+    "note": "COMUNICACION CELULAR COMCEL S",
+    "cat": "servicios",
+    "date": "2026-05-02T14:07:09",
+    "source": "email",
+    "gmail_id": "19dea1676a4a16f8"
+  },
+  {
+    "type": "expense",
+    "amount": 378025,
+    "note": "NU Compania de Financiamiento",
+    "cat": "otro",
+    "date": "2026-05-01T20:41:10",
+    "source": "email",
+    "gmail_id": "19de658d7dead8d8"
+  },
+  {
+    "type": "expense",
+    "amount": 7427,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-05-01T17:09:35",
+    "source": "email",
+    "gmail_id": "19de59716d59e4aa"
+  },
+  {
+    "type": "expense",
+    "amount": 160000,
+    "note": "Transferencia a cuenta *3043900727",
+    "cat": "otro",
+    "date": "2026-05-01T17:07:00",
+    "source": "email",
+    "gmail_id": "19de5955bb50974e"
+  },
+  {
+    "type": "expense",
+    "amount": 7319,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-05-01T16:56:10",
+    "source": "email",
+    "gmail_id": "19de58acfc7addc4"
+  },
+  {
+    "type": "income",
+    "amount": 65000,
+    "note": "Transferencia de NATHALIA GIL",
+    "cat": "otro",
+    "date": "2026-04-30T17:55:00",
+    "source": "email",
+    "gmail_id": "19de09a4c6c6f207"
+  },
+  {
+    "type": "expense",
+    "amount": 180000,
+    "note": "Transferencia Bancolombia",
+    "cat": "otro",
+    "date": "2026-04-29T16:53:00",
+    "source": "email",
+    "gmail_id": "19ddb3c0d286c322"
+  },
+  {
+    "type": "expense",
+    "amount": 36690,
+    "note": "PORKBUN.COM",
+    "cat": "otro",
+    "date": "2026-04-28T13:51:29",
+    "source": "email",
+    "gmail_id": "19dd56ea98155aa4"
+  },
+  {
+    "type": "expense",
+    "amount": 57900,
+    "note": "DOMINO S PIZZA",
+    "cat": "food",
+    "date": "2026-04-26T16:32:09",
+    "source": "email",
+    "gmail_id": "19dcbb50433090ac"
+  },
+  {
+    "type": "expense",
+    "amount": 3000,
+    "note": "GOOGLE *CHROME TEMP",
+    "cat": "otro",
+    "date": "2026-04-26T16:32:02",
+    "source": "email",
+    "gmail_id": "19dcbb4ec8039fb1"
+  },
+  {
+    "type": "expense",
+    "amount": 3000,
+    "note": "GOOGLE *CHROME TEMP",
+    "cat": "otro",
+    "date": "2026-04-26T16:31:49",
+    "source": "email",
+    "gmail_id": "19dcbb4b6ef6ac69"
+  },
+  {
+    "type": "expense",
+    "amount": 3000,
+    "note": "GOOGLE *CHROME TEMP",
+    "cat": "otro",
+    "date": "2026-04-26T16:30:12",
+    "source": "email",
+    "gmail_id": "19dcbb340bde2bcc"
+  },
+  {
+    "type": "expense",
+    "amount": 14016,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-04-26T01:14:44",
+    "source": "email",
+    "gmail_id": "19dc86d1f7c8391b"
+  },
+  {
+    "type": "expense",
+    "amount": 6541,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-04-25T14:53:10",
+    "source": "email",
+    "gmail_id": "19dc6340be516037"
+  },
+  {
+    "type": "expense",
+    "amount": 7970,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-04-25T14:29:42",
+    "source": "email",
+    "gmail_id": "19dc61e8e5b2240f"
+  },
+  {
+    "type": "expense",
+    "amount": 7458,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-04-25T14:23:50",
+    "source": "email",
+    "gmail_id": "19dc6192f434a26d"
+  },
+  {
+    "type": "expense",
+    "amount": 7458,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-04-25T14:20:28",
+    "source": "email",
+    "gmail_id": "19dc6161ab41799b"
+  },
+  {
+    "type": "expense",
+    "amount": 20431,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-04-25T12:59:41",
+    "source": "email",
+    "gmail_id": "19dc5cc25a355a86"
+  },
+  {
+    "type": "expense",
+    "amount": 7669,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-04-25T11:42:15",
+    "source": "email",
+    "gmail_id": "19dc58541062703c"
+  },
+  {
+    "type": "expense",
+    "amount": 8780,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-04-25T09:50:47",
+    "source": "email",
+    "gmail_id": "19dc51f30c5f2791"
+  },
+  {
+    "type": "expense",
+    "amount": 9548,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-04-25T09:48:07",
+    "source": "email",
+    "gmail_id": "19dc51cc2423b8dd"
+  },
+  {
+    "type": "expense",
+    "amount": 152000,
+    "note": "Transferencia Bancolombia",
+    "cat": "otro",
+    "date": "2026-04-24T18:29:00",
+    "source": "email",
+    "gmail_id": "19dc1d42a39e5619"
+  },
+  {
+    "type": "expense",
+    "amount": 12177,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-04-24T15:10:32",
+    "source": "email",
+    "gmail_id": "19dc11d9530fb491"
+  },
+  {
+    "type": "expense",
+    "amount": 11180,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-04-24T14:52:12",
+    "source": "email",
+    "gmail_id": "19dc10cccd5f89d9"
+  },
+  {
+    "type": "expense",
+    "amount": 73162,
+    "note": "CLAUDE.AI SUBSCRIPTION",
+    "cat": "otro",
+    "date": "2026-04-23T20:09:13",
+    "source": "email",
+    "gmail_id": "19dbd08ad2e3219a"
+  },
+  {
+    "type": "expense",
+    "amount": 20900,
+    "note": "GOOGLE PLAY YOUTUBE",
+    "cat": "ocio",
+    "date": "2026-04-22T15:59:09",
+    "source": "email",
+    "gmail_id": "19db6fd5fd2eca81"
+  },
+  {
+    "type": "expense",
+    "amount": 92800,
+    "note": "Mercadopago Colombia S.A.",
+    "cat": "otro",
+    "date": "2026-04-21T23:06:04",
+    "source": "email",
+    "gmail_id": "19db35de8fd9f0af"
+  },
+  {
+    "type": "expense",
+    "amount": 46313,
+    "note": "COMUNICACION CELULAR COMCEL S",
+    "cat": "servicios",
+    "date": "2026-04-21T17:18:47",
+    "source": "email",
+    "gmail_id": "19db21ff090eb857"
+  },
+  {
+    "type": "expense",
+    "amount": 49692,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-04-19T02:47:12",
+    "source": "email",
+    "gmail_id": "19da4b53f5a311c5"
+  },
+  {
+    "type": "expense",
+    "amount": 49856,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-04-19T02:45:50",
+    "source": "email",
+    "gmail_id": "19da4b3fc2a4d256"
+  },
+  {
+    "type": "expense",
+    "amount": 25867,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-04-18T21:25:50",
+    "source": "email",
+    "gmail_id": "19da38f0903c2a79"
+  },
+  {
+    "type": "expense",
+    "amount": 270000,
+    "note": "Transferencia a cuenta *3214997957",
+    "cat": "otro",
+    "date": "2026-04-18T15:03:00",
+    "source": "email",
+    "gmail_id": "19da23316bd5fd6e"
+  },
+  {
+    "type": "expense",
+    "amount": 13554,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-04-18T14:40:52",
+    "source": "email",
+    "gmail_id": "19da21c47a5194b1"
+  },
+  {
+    "type": "expense",
+    "amount": 12693,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-04-18T14:18:49",
+    "source": "email",
+    "gmail_id": "19da208166e38809"
+  },
+  {
+    "type": "income",
+    "amount": 322622,
+    "note": "Transferencia de DIANA RAMIREZ",
+    "cat": "freelance",
+    "date": "2026-04-17T12:59:00",
+    "source": "email",
+    "gmail_id": "19d9c9914c39085f"
+  },
+  {
+    "type": "income",
+    "amount": 831125,
+    "note": "Transferencia de DIANA RAMIREZ",
+    "cat": "freelance",
+    "date": "2026-04-17T12:43:00",
+    "source": "email",
+    "gmail_id": "19d9c8a827685446"
+  },
+  {
+    "type": "expense",
+    "amount": 42390,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-04-17T00:33:13",
+    "source": "email",
+    "gmail_id": "19d99edde9001a95"
+  },
+  {
+    "type": "expense",
+    "amount": 35199,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-04-17T00:29:49",
+    "source": "email",
+    "gmail_id": "19d99eac26a7ba4f"
+  },
+  {
+    "type": "expense",
+    "amount": 13980,
+    "note": "TIENDAS ARA",
+    "cat": "market",
+    "date": "2026-04-16T19:24:00",
+    "source": "email",
+    "gmail_id": "19d98d3a663520b8"
+  },
+  {
+    "type": "expense",
+    "amount": 17067,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-04-16T17:26:26",
+    "source": "email",
+    "gmail_id": "19d98672116d52be"
+  },
+  {
+    "type": "expense",
+    "amount": 62000,
+    "note": "LA BEERBERIA",
+    "cat": "ocio",
+    "date": "2026-04-16T17:22:00",
+    "source": "email",
+    "gmail_id": "19d986354d8c9f8d"
+  },
+  {
+    "type": "expense",
+    "amount": 14302,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-04-16T17:17:52",
+    "source": "email",
+    "gmail_id": "19d985f478ee5ddb"
+  },
+  {
+    "type": "expense",
+    "amount": 18947,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-04-16T17:14:07",
+    "source": "email",
+    "gmail_id": "19d985bdadca7513"
+  },
+  {
+    "type": "expense",
+    "amount": 150000,
+    "note": "Transferencia",
+    "cat": "otro",
+    "date": "2026-04-15T18:48:00",
+    "source": "email",
+    "gmail_id": "19d938bd1a1d48da"
+  },
+  {
+    "type": "expense",
+    "amount": 150000,
+    "note": "Transferencia",
+    "cat": "otro",
+    "date": "2026-04-15T18:25:00",
+    "source": "email",
+    "gmail_id": "19d937680f44896c"
+  },
+  {
+    "type": "expense",
+    "amount": 9263,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-04-15T14:42:40",
+    "source": "email",
+    "gmail_id": "19d92aad6a4783d5"
+  },
+  {
+    "type": "expense",
+    "amount": 7087,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-04-15T14:20:33",
+    "source": "email",
+    "gmail_id": "19d929698ffd0066"
+  },
+  {
+    "type": "expense",
+    "amount": 480000,
+    "note": "Transferencia",
+    "cat": "otro",
+    "date": "2026-04-15T13:43:00",
+    "source": "email",
+    "gmail_id": "19d9274fd0111a85"
+  },
+  {
+    "type": "expense",
+    "amount": 160000,
+    "note": "Transferencia",
+    "cat": "otro",
+    "date": "2026-04-15T13:40:00",
+    "source": "email",
+    "gmail_id": "19d9271d422efd3d"
+  },
+  {
+    "type": "income",
+    "amount": 800000,
+    "note": "Transferencia de ADELINDA LEMUS",
+    "cat": "otro",
+    "date": "2026-04-15T13:32:00",
+    "source": "email",
+    "gmail_id": "19d926ac64688ff2"
+  },
+  {
+    "type": "expense",
+    "amount": 200000,
+    "note": "Transferencia a cuenta *60264534316",
+    "cat": "otro",
+    "date": "2026-04-14T17:24:00",
+    "source": "email",
+    "gmail_id": "19d8e188e7528e1c"
+  },
+  {
+    "type": "expense",
+    "amount": 17446,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-04-14T15:40:23",
+    "source": "email",
+    "gmail_id": "19d8db952218adf8"
+  },
+  {
+    "type": "expense",
+    "amount": 7939,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-04-14T13:58:13",
+    "source": "email",
+    "gmail_id": "19d8d5bcb9ac3cfd"
+  },
+  {
+    "type": "income",
+    "amount": 893333,
+    "note": "Transferencia de DIANA RAMIREZ",
+    "cat": "otro",
+    "date": "2026-04-14T13:05:00",
+    "source": "email",
+    "gmail_id": "19d8d2b4b6d8571a"
+  },
+  {
+    "type": "expense",
+    "amount": 14353,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-04-14T12:54:38",
+    "source": "email",
+    "gmail_id": "19d8d219334ef435"
+  },
+  {
+    "type": "expense",
+    "amount": 237003,
+    "note": "NU Compania de Financiamiento",
+    "cat": "otro",
+    "date": "2026-04-14T12:53:02",
+    "source": "email",
+    "gmail_id": "19d8d201f0ff0296"
+  },
+  {
+    "type": "expense",
+    "amount": 18611,
+    "note": "ANTHROPIC",
+    "cat": "servicios",
+    "date": "2026-04-14T11:52:47",
+    "source": "email",
+    "gmail_id": "19d8ce8f3d9247d0"
+  },
+  {
+    "type": "expense",
+    "amount": 100,
+    "note": "MICROSOFT*DL",
+    "cat": "servicios",
+    "date": "2026-04-13T21:18:28",
+    "source": "email",
+    "gmail_id": "19d89c87db7e61ac"
+  },
+  {
+    "type": "expense",
+    "amount": 76000,
+    "note": "Transferencia a cuenta *58920556521",
+    "cat": "otro",
+    "date": "2026-04-11T23:10:00",
+    "source": "email",
+    "gmail_id": "19d7fe210fa1f8f0"
+  },
+  {
+    "type": "expense",
+    "amount": 5000,
+    "note": "pago por codigo QR",
+    "cat": "otro",
+    "date": "2026-05-17T12:37:00",
+    "source": "email",
+    "gmail_id": "19e3703e2bc265c0"
+  },
+  {
+    "type": "expense",
+    "amount": 192385,
+    "note": "Evolution Ideas SAS",
+    "cat": "otro",
+    "date": "2026-05-16T15:31:23",
+    "source": "email",
+    "gmail_id": "19e327ca0c9ec166"
+  },
+  {
+    "type": "expense",
+    "amount": 31799,
+    "note": "DLO*MICROSOFT*XBOX",
+    "cat": "ocio",
+    "date": "2026-05-16T01:08:15",
+    "source": "email",
+    "gmail_id": "19e2f665a0ac908a"
+  },
+  {
+    "type": "expense",
+    "amount": 11354,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-05-15T18:01:57",
+    "source": "email",
+    "gmail_id": "19e2de0100de9248"
+  },
+  {
+    "type": "expense",
+    "amount": 24268,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-05-15T17:07:38",
+    "source": "email",
+    "gmail_id": "19e2dae57c85894d"
+  },
+  {
+    "type": "expense",
+    "amount": 23328,
+    "note": "UBER RIDES",
+    "cat": "transport",
+    "date": "2026-05-15T17:03:51",
+    "source": "email",
+    "gmail_id": "19e2daadfe3650ce"
+  },
+  {
+    "type": "income",
+    "amount": 111900,
+    "note": "Transferencia de MAGDA BARRERA",
+    "cat": "otro",
+    "date": "2026-05-15T16:46:00",
+    "source": "email",
+    "gmail_id": "19e2d9dcc9e0916e"
+  },
+  {
+    "type": "income",
+    "amount": 831125,
+    "note": "Transferencia de DIANA RAMIREZ",
+    "cat": "otro",
+    "date": "2026-05-15T15:54:00",
+    "source": "email",
+    "gmail_id": "19e2d6b3a8da4bb6"
+  },
+  {
+    "type": "income",
+    "amount": 100000,
+    "note": "Transferencia de MARIA ALEJANDRA SILVA ROJAS",
+    "cat": "otro",
+    "date": "2026-05-15T13:36:00",
+    "source": "email",
+    "gmail_id": "19e2ced73876888c"
+  },
+  {
+    "type": "income",
+    "amount": 111900,
+    "note": "Transferencia de Piedad Catalina Arguelles Mendoza",
+    "cat": "otro",
+    "date": "2026-05-15T10:43:00",
+    "source": "email",
+    "gmail_id": "19e2c4efee963fe3"
+  },
+  {
+    "type": "income",
+    "amount": 893333,
+    "note": "Transferencia de DIANA RAMIREZ",
+    "cat": "otro",
+    "date": "2026-05-14T19:46:00",
+    "source": "email",
+    "gmail_id": "19e29191d545e866"
+  },
+  {
+    "type": "expense",
+    "amount": 145000,
+    "note": "Transferencia a cuenta *3107920935",
+    "cat": "otro",
+    "date": "2026-05-13T21:28:00",
+    "source": "email",
+    "gmail_id": "19e2450a323344fd"
+  }
+]
