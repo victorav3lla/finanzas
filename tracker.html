@@ -31,8 +31,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .account-balance-input:focus{border-bottom-color:#444}
 .account-delete{background:none;border:none;cursor:pointer;color:#2a2a2a;font-size:16px;padding:0 2px;transition:color .12s;line-height:1}
 .account-item:hover .account-delete{color:#555}
-.account-history-toggle{background:none;border:none;cursor:pointer;color:#333;font-size:11px;padding:0 4px;transition:color .12s}
-.account-item:hover .account-history-toggle{color:#666}
+.account-history-toggle{background:none;border:none;cursor:pointer;color:#555;font-size:11px;padding:0 4px;transition:color .12s}
+.account-item:hover .account-history-toggle{color:#999}
 .account-history{display:none;padding:6px 0 2px 32px;border-top:0.5px solid #1f1f1f;margin-top:6px}
 .account-history.open{display:block}
 .history-item{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:12px;border-bottom:0.5px solid #1a1a1a}
@@ -473,10 +473,13 @@ async function updateAccountBalance(id){
   const balance=parseFloat(document.getElementById('newbal-'+id).value);
   if(isNaN(balance)||balance<0){document.getElementById('newbal-'+id).focus();return;}
   const note=document.getElementById('newnote-'+id).value.trim();
-  await sb.from('accounts').update({balance,updated_at:new Date().toISOString()}).eq('id',id);
-  await sb.from('account_history').insert({account_id:id,balance,note});
+  const{error:e1}=await sb.from('accounts').update({balance,updated_at:new Date().toISOString()}).eq('id',id);
+  const{error:e2}=await sb.from('account_history').insert({account_id:id,balance,note});
+  if(e1||e2){showToast('Error al guardar');console.error(e1||e2);return;}
   showToast('Saldo actualizado');
-  renderAccounts();
+  await renderAccounts();
+  const panel=document.getElementById('hist-'+id);
+  if(panel)panel.classList.add('open');
 }
 async function deleteAccount(id){
   if(!confirm('Eliminar esta cuenta?'))return;
