@@ -6,3 +6,6 @@ transacciones.json
 __pycache__/
 *.pyc
 .env
+credentials.json
+token.json
+transacciones.json
