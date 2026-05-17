@@ -1,0 +1,8 @@
+venv/
+credentials.json
+token.json
+*.Zone.Identifier
+transacciones.json
+__pycache__/
+*.pyc
+.env
